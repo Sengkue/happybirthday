@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Happy Birthday :)</title>
+    <link
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" type="image/png" href="./img/heart.svg" />
+    <link rel="stylesheet" href="style/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/howler"></script>
+  </head>
+<body>
+  <!-- Audio Control Buttons -->
+  <div class="audio-control">
+    <!-- Play/Pause Button -->
+    <button id="audioButton" title="Toggle Audio" aria-label="Toggle Audio">
+      <svg id="audioIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <!-- Default Play Icon -->
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </button>
+    <!-- Restart Button -->
+    <button id="restartButton" title="Restart Audio" aria-label="Restart Audio">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+      </svg>
+    </button>
+    <!-- Volume Slider -->
+    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" title="Volume" />
+  </div>
+
+  <!-- Add audio element -->
+  <script>
+    // Initialize Howler.js audio
+    var sound = new Howl({
+      src: ['audio/hua.mp3'],
+      loop: true,
+      volume: 1.0,
+      html5: true, // Use HTML5 audio for better compatibility
+      onplay: function () {
+        console.log("Audio is playing...");
+      },
+      onloaderror: function (id, error) {
+        console.error("Howler.js error:", error);
+        alert("Failed to load audio. Please check the file path.");
+      }
+    });
+
+    // Define SVG paths for play and pause icons
+    const playIcon = `
+      <path d="M8 5v14l11-7z" />
+    `;
+    const pauseIcon = `
+      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+    `;
+
+    // Variables to track playback state
+    let isPlaying = false; // Track if audio is playing
+    let lastPosition = 0; // Store the last playback position
+
+    // Select elements
+    const audioButton = document.getElementById('audioButton');
+    const restartButton = document.getElementById('restartButton');
+    const audioIcon = document.getElementById('audioIcon');
+    const volumeSlider = document.getElementById('volumeSlider');
+
+    // Toggle play/pause functionality
+    audioButton.addEventListener('click', () => {
+      if (!isPlaying) {
+        // Start or resume the audio
+        sound.play();
+        audioIcon.innerHTML = pauseIcon; // Change to pause icon
+        audioButton.style.backgroundColor = '#4caf50'; // Visual feedback
+        isPlaying = true;
+      } else {
+        // Pause the audio
+        lastPosition = sound.seek(); // Save the current playback position
+        sound.pause();
+        audioIcon.innerHTML = playIcon; // Change to play icon
+        audioButton.style.backgroundColor = '#ff4d4d'; // Visual feedback
+        isPlaying = false;
+      }
+    });
+
+    // Restart functionality
+    restartButton.addEventListener('click', () => {
+      sound.seek(0); // Reset playback position to the beginning
+      sound.play(); // Start playing from the beginning
+      audioIcon.innerHTML = pauseIcon; // Change to pause icon
+      audioButton.style.backgroundColor = '#4caf50'; // Visual feedback
+      isPlaying = true; // Update playback state
+    });
+
+    // Volume control
+    volumeSlider.addEventListener('input', () => {
+      const volume = parseFloat(volumeSlider.value);
+      sound.volume(volume); // Update volume dynamically
+    });
+
+    // Handle browser auto-play restrictions
+    document.addEventListener('DOMContentLoaded', () => {
+      // Attempt to play audio automatically
+      sound.play().catch((error) => {
+        console.warn("Auto-play was blocked by the browser. User interaction is required.");
+        // Provide a fallback message or button for the user to start playback
+        alert("Please click the play button to start the audio.");
+      });
+    });
+  </script>
+
+<div class="container">
+  <div class="one">
+    <h1 class="one">
+      Hey
+      <span id="name">Paj Tawg Xyooj</span>
+    </h1>
+    <p class="two" id="greetingText">ชื่อของเธอสวยมาก ฉันอยากรู้จักเธอมากขึ้น 😊</p>
+  </div>
+  <div class="three">
+    <p>วันพิเศษของเธอมาแล้ว!!! :D</p>
+  </div>
+  <div class="four">
+    <div class="text-box">
+      <p class="hbd-chatbox">
+        🎉 ฉันอยากส่งความสุขในวันเกิดให้เธอ
+      </p>
+      <p class="fake-btn">Send</p>
+    </div>
+  </div>
+  <div class="five">
+    <p class="idea-1">ฉันอยากทำอะไรสักอย่างสำหรับวันเกิดเธอ..</p>
+    <p class="idea-2">แต่แล้วฉันก็คิดได้ว่า</p>
+    <p class="idea-3">
+      การส่งความอบอุ่นและคำอวยพรดีๆ ก็น่าจะ<strong>พิเศษ</strong>เหมือนกัน
+    </p>
+    <p class="idea-4">เพราะว่า,</p>
+    <p class="idea-5">
+      ถึงแม้เราจะยังไม่ได้เจอกัน แต่ฉันก็อยากให้เธอมีความสุขในวันนี้
+      <span>:)</span>
+    </p>
+    <p class="idea-6">
+      <span>S</span>
+      <span>O</span>
+    </p>
+  </div>
+  <div class="six">
+    <img src="img/vector.jpg" alt="" class = "girl-dp" id="imagePath" />
+    <div class="wish">
+      <h3 class="wish-hbd">สุขสันต์วันเกิดนะ!</h3>
+      <h5 id="wishText">หวังว่าวันพิเศษของเธอจะเต็มไปด้วยความสุข! 🎂✨</h5>
+    </div>
+  </div>
+  <div class="seven">
+    <div class="baloons">
+      <img src="img/balloon.svg" alt="" />
+      <img src="img/smiling.svg" />
+      <img src="img/heart.svg" />
+      <img src="img/balloon.svg" alt="" />
+      <img src="img/heart.svg" />
+      <img src="img/balloon.svg" alt="" />
+      <img src="img/music-note.svg" alt="" />
+      <img src="img/heart.svg" />
+      <img src="img/balloon.svg" alt="" />
+      <img src="img/heart.svg" />
+      <img src="img/balloon.svg" alt="" />
+      <img src="img/heart.svg" />
+      <img src="img/heart.svg" />
+      <img src="img/music-note.svg" alt="" />
+      <img src="img/smiling.svg" />
+      <img src="img/happy.svg" alt="" />
+      <img src="img/balloon.svg" alt="" />
+      <img src="img/heart.svg" />
+      <img src="img/smiling.svg" />
+    </div>
+  </div>
+  <div class="eight">
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="20" />
+  </svg>
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" />
+    </svg>
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" />
+    </svg>
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" />
+    </svg>
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" />
+    </svg>
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" />
+    </svg>
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" />
+    </svg>
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" />
+    </svg>
+    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" />
+    </svg>
+  </div>
+  <div class="nine">
+    <p>ขอให้วันเกิดปีนี้เป็นจุดเริ่มต้นของสิ่งดีๆ มากมาย และหวังว่าเราจะได้รู้จักกันมากขึ้น</p>
+    <p id="replay">ส่งความอบอุ่น 💕</p>
+    <p class="last-smile">:)</p>
+  </div>
+</div>
+</body>
+
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+<script type="text/babel" src="script/main.js"></script>
+</html>
