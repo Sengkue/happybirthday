@@ -15,6 +15,7 @@ body {
   visibility: hidden;
   position: relative;
   overflow: hidden;
+  z-index: 10;
 }
 
 .container div.six {
@@ -223,14 +224,55 @@ body {
   margin: 10px 0 0;
 }
 
+.nine {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  display: inline-block !important; /* Force inline block for box sizing */
+  width: auto;
+  max-width: 80%;
+  left: 50% !important;
+  transform: translateX(-50%);
+  top: 15vh !important;
+  opacity: 0;
+  visibility: hidden;
+}
+
 .nine p {
   font-size: 2rem;
-  font-weight: lighter;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20px;
+  line-height: 1.5;
 }
 
 #replay {
-  z-index: 3;
+  display: inline-block;
+  margin-top: 10px;
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  background-color: #ff69b4;
+  color: white !important;
+  border: none;
+  border-radius: 50px;
   cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+  transition: transform 0.2s, background-color 0.2s;
+  font-weight: bold;
+}
+
+#replay:hover {
+  transform: scale(1.05);
+  background-color: #ff1493;
+}
+
+.last-smile {
+  margin-top: 30px;
+  font-size: 3rem !important;
 }
 
 /* Media Queries */
@@ -336,4 +378,97 @@ body {
 
 #volumeSlider {
   width: 100px;
+}
+
+/* Start Overlay */
+.start-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.95);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease;
+}
+
+#startButton {
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+  transition: transform 0.2s, background-color 0.2s;
+  font-family: inherit;
+}
+
+#startButton:hover {
+  transform: scale(1.05);
+  background-color: #ff1493;
+}
+
+/* Photo Gallery Surprise */
+.gallery {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* Let clicks pass through */
+  z-index: 2; /* Below the text, but above background */
+  overflow: hidden;
+}
+
+.gallery img.polaroid {
+  position: absolute;
+  width: 180px;
+  border: 10px solid white;
+  border-bottom: 30px solid white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  border-radius: 4px;
+}
+
+@media screen and (max-width: 500px) {
+  .nine {
+    width: 90%;
+    max-width: 90%;
+    padding: 25px 15px;
+    border-radius: 15px;
+    top: 5vh !important;
+  }
+  
+  .nine p {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+  
+  #replay {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    margin-top: 5px;
+  }
+  
+  .last-smile {
+    font-size: 2rem !important;
+    margin-top: 15px;
+  }
+  
+  #startButton {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+  }
+  
+  .gallery img.polaroid {
+    width: 100px;
+    border-width: 6px;
+    border-bottom-width: 20px;
+  }
 }

@@ -13,6 +13,10 @@
     <script src="https://cdn.jsdelivr.net/npm/howler"></script>
   </head>
 <body>
+  <!-- Overlay -->
+  <div id="startOverlay" class="start-overlay">
+    <button id="startButton">🎁 เปิดของขวัญของคุณ 🎁</button>
+  </div>
   <!-- Audio Control Buttons -->
   <div class="audio-control">
     <!-- Play/Pause Button -->
@@ -34,21 +38,6 @@
 
   <!-- Add audio element -->
   <script>
-    // Initialize Howler.js audio
-    var sound = new Howl({
-      src: ['audio/hua.mp3'],
-      loop: true,
-      volume: 1.0,
-      html5: true, // Use HTML5 audio for better compatibility
-      onplay: function () {
-        console.log("Audio is playing...");
-      },
-      onloaderror: function (id, error) {
-        console.error("Howler.js error:", error);
-        alert("Failed to load audio. Please check the file path.");
-      }
-    });
-
     // Define SVG paths for play and pause icons
     const playIcon = `
       <path d="M8 5v14l11-7z" />
@@ -59,7 +48,6 @@
 
     // Variables to track playback state
     let isPlaying = false; // Track if audio is playing
-    let lastPosition = 0; // Store the last playback position
 
     // Select elements
     const audioButton = document.getElementById('audioButton');
@@ -67,31 +55,43 @@
     const audioIcon = document.getElementById('audioIcon');
     const volumeSlider = document.getElementById('volumeSlider');
 
+    // Initialize Howler.js audio
+    var sound = new Howl({
+      src: ['audio/hua.mp3'],
+      loop: true,
+      volume: 1.0,
+      html5: true, // Use HTML5 audio for better compatibility
+      onplay: function () {
+        console.log("Audio is playing...");
+        isPlaying = true;
+        audioIcon.innerHTML = pauseIcon; // Change to pause icon
+        audioButton.style.backgroundColor = '#4caf50'; // Visual feedback
+      },
+      onpause: function() {
+        isPlaying = false;
+        audioIcon.innerHTML = playIcon; // Change to play icon
+        audioButton.style.backgroundColor = '#ff4d4d'; // Visual feedback
+      },
+      onloaderror: function (id, error) {
+        console.error("Howler.js error:", error);
+      }
+    });
+
     // Toggle play/pause functionality
     audioButton.addEventListener('click', () => {
       if (!isPlaying) {
-        // Start or resume the audio
         sound.play();
-        audioIcon.innerHTML = pauseIcon; // Change to pause icon
-        audioButton.style.backgroundColor = '#4caf50'; // Visual feedback
-        isPlaying = true;
       } else {
-        // Pause the audio
-        lastPosition = sound.seek(); // Save the current playback position
         sound.pause();
-        audioIcon.innerHTML = playIcon; // Change to play icon
-        audioButton.style.backgroundColor = '#ff4d4d'; // Visual feedback
-        isPlaying = false;
       }
     });
 
     // Restart functionality
     restartButton.addEventListener('click', () => {
       sound.seek(0); // Reset playback position to the beginning
-      sound.play(); // Start playing from the beginning
-      audioIcon.innerHTML = pauseIcon; // Change to pause icon
-      audioButton.style.backgroundColor = '#4caf50'; // Visual feedback
-      isPlaying = true; // Update playback state
+      if (!isPlaying) {
+        sound.play(); // Start playing from the beginning
+      }
     });
 
     // Volume control
@@ -100,14 +100,24 @@
       sound.volume(volume); // Update volume dynamically
     });
 
-    // Handle browser auto-play restrictions
-    document.addEventListener('DOMContentLoaded', () => {
-      // Attempt to play audio automatically
-      sound.play().catch((error) => {
-        console.warn("Auto-play was blocked by the browser. User interaction is required.");
-        // Provide a fallback message or button for the user to start playback
-        alert("Please click the play button to start the audio.");
-      });
+    // Start Overlay functionality
+    const startOverlay = document.getElementById('startOverlay');
+    const startButton = document.getElementById('startButton');
+
+    startButton.addEventListener('click', () => {
+      if (typeof window.sound !== 'undefined') window.sound.play();
+      else if (typeof sound !== 'undefined') sound.play(); // Play sound
+      
+      startOverlay.style.opacity = '0';
+      setTimeout(() => {
+        startOverlay.style.display = 'none';
+      }, 500); // Wait for transition
+      
+      if (typeof window.tl !== 'undefined') {
+        window.tl.restart(); // Reliably restart from 0
+      } else if (typeof window.startSurprise === 'function') {
+        window.startSurprise();
+      }
     });
   </script>
 
@@ -115,7 +125,7 @@
   <div class="one">
     <h1 class="one">
       😊
-      <span id="name">Paj Tawg Xyooj</span>
+      <span id="name">Nas Lis</span>
     </h1>
     <p class="two" id="greetingText">- ชื่อของเธอสวยมาก หลังจากที่ได้ฟังแล้วทำให้ฉันมีความสุข เหมือนได้นั่งบนภูเขาดูดอกไม้บาน 😊</p>
   </div>
@@ -207,10 +217,13 @@
   </div>
   <div class="nine">
     <p>ขอให้วันเกิดปีนี้เป็นจุดเริ่มต้นของสิ่งดีๆ มากมาย และหวังว่าเราจะได้รู้จักกันมากขึ้น</p>
-    <p id="replay">ส่งความอบอุ่น 💕</p>
+    <p id="replay">เปิดอีกครั้ง 🎁</p>
     <p class="last-smile">:)</p>
   </div>
 </div>
+
+<!-- Photo Gallery Surprise -->
+<div class="gallery" id="surpriseGallery"></div>
 </body>
 
 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>

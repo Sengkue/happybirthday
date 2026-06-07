@@ -1,5 +1,16 @@
 // Animation Timeline
 const animationTimeline = () => {
+  // Setup polaroids before animation
+  const gallery = document.getElementById("surpriseGallery");
+  gallery.innerHTML = "";
+  for (let i = 1; i <= 14; i++) {
+    const img = document.createElement("img");
+    let num = i < 10 ? '0' + i : i;
+    img.src = `img/naslis/${num}.jpg`;
+    img.className = "polaroid";
+    gallery.appendChild(img);
+  }
+
   // Spit chars that needs to be animated individually
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
   const hbd = document.getElementsByClassName("wish-hbd")[0];
@@ -27,6 +38,7 @@ const animationTimeline = () => {
   };
 
   const tl = new TimelineMax();
+  window.tl = tl;
 
   tl.to(".container", 0.1, {
     visibility: "visible",
@@ -254,7 +266,10 @@ const animationTimeline = () => {
       opacity: 0,
       y: 30,
       zIndex: "-1",
-    })
+    }, "scatter")
+    .to(".nine", 0.5, {
+      autoAlpha: 1
+    }, "scatter")
     .staggerFrom(".nine p", 1, ideaTextTrans, 1.2)
     .to(
       ".last-smile",
@@ -265,13 +280,64 @@ const animationTimeline = () => {
       "+=1"
     );
 
+  // Polaroid scatter animation
+  const polaroids = document.querySelectorAll(".polaroid");
+  polaroids.forEach((polaroid, i) => {
+    const endX = Math.random() * (window.innerWidth - 180);
+    const endY = Math.random() * (window.innerHeight - 200);
+    const endRot = (Math.random() - 0.5) * 80;
+
+    tl.fromTo(
+      polaroid,
+      1.5,
+      {
+        opacity: 0,
+        scale: 0.1,
+        x: window.innerWidth / 2 - 90,
+        y: window.innerHeight / 2 - 100,
+        rotation: Math.random() * 360,
+      },
+      {
+        visibility: "visible",
+        opacity: 1,
+        scale: 1,
+        x: endX,
+        y: endY,
+        rotation: endRot,
+        ease: Expo.easeOut,
+      },
+      `scatter+=${i * 0.1}`
+    );
+  });
+
   // tl.seek("currentStep");
   // tl.timeScale(2);
 
   // Restart Animation on click
   const replyBtn = document.getElementById("replay");
   replyBtn.addEventListener("click", () => {
-    tl.restart();
+    // Show overlay again
+    const startOverlay = document.getElementById('startOverlay');
+    if (startOverlay) {
+      startOverlay.style.display = 'flex';
+      setTimeout(() => {
+        startOverlay.style.opacity = '1';
+      }, 10);
+    }
+    
+    // Reset timeline and stop music
+    window.tl.pause(0);
+    const audioToStop = window.sound || (typeof sound !== 'undefined' ? sound : null);
+    if (audioToStop) {
+      audioToStop.stop();
+      if (typeof isPlaying !== 'undefined') isPlaying = false; 
+      
+      // Also update audio icons if possible
+      const audioIcon = document.getElementById('audioIcon');
+      const audioButton = document.getElementById('audioButton');
+      if (audioIcon && typeof playIcon !== 'undefined') audioIcon.innerHTML = playIcon;
+      if (audioButton) audioButton.style.backgroundColor = '#ff4d4d';
+    }
   });
 };
 
@@ -302,4 +368,8 @@ const resolveFetch = () => {
   });
 };
 
-resolveFetch().then(animationTimeline());
+window.startSurprise = () => {
+  resolveFetch().then(() => {
+    animationTimeline();
+  });
+};
