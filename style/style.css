@@ -121,6 +121,15 @@ body {
   display: inline-block;
   max-width: 45%;
   height: auto;
+  border-radius: 20px;
+  border: 10px solid white;
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 20px rgba(255,105,180,0.4); }
+  50% { box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 50px rgba(255,105,180,0.8); }
+  100% { box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 20px rgba(255,105,180,0.4); }
 }
 
 .six .hat {
